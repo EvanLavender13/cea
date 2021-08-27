@@ -5,15 +5,19 @@ import numpy as np
 
 
 def select_linear(nhood, fitness):
-    n = nhood.shape[0]
-    r = n * (n + 1) / 2
-    sorted_idx = np.argsort(fitness)
+    n = nhood.shape[0] - 1
+    # r = n * (n + 1) / 2
+    sorted_idx = np.argsort(fitness[1:])
 
     # TODO: which way should I do this?
-    probs = np.arange(n, 0, -1) / r
-    # probs  = np.array([1 / (i + 1) for i in range(n)])
-    # probs /= np.sum(probs)
-    for i in range(n): yield np.random.choice(sorted_idx, size=2, replace=False, p=probs)
+    # probs = np.arange(n, 0, -1) / r
+    # print(fitness[1:])
+    # print(sorted_idx)
+    # print(probs)
+    probs  = np.array([1 / (i + 1) for i in range(n)])
+    probs /= np.sum(probs)
+    # print(probs)
+    return np.random.choice(sorted_idx, p=probs)
 
 
 ### Recombination
@@ -29,14 +33,15 @@ def recomb_singlepoint(a, b):
 ### Mutation
 
 
-def something():
-    print("a")
+def mutate_gaussian(mu, sigma=0.1):
+    n = mu.shape[0]
+    return mu + sigma * np.random.randn(n)
 
 
 ### Replacement
 
 
-def replace_all():
+def replace_always():
     print("a")
 
 
@@ -60,7 +65,10 @@ def nhood_linear(x, y, dimensions, n=5):
 
 
 def nhood_get(population, fitness, nhood_idx):
-    nhood_idx = list(nhood_idx)
     nhood     = np.array([population[x][y] for x, y in nhood_idx])
     nhood_fit = np.array([fitness[x][y]    for x, y in nhood_idx])
     return nhood, nhood_fit
+
+
+def nhood_set(population, nhood, nhood_idx):
+    for i, (x, y) in enumerate(nhood_idx): population[x][y] = nhood[i]
