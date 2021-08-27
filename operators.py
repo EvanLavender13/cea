@@ -5,44 +5,62 @@ import numpy as np
 
 
 def select_linear(nhood, fitness):
-    print(nhood)
-    print(fitness)
+    n = nhood.shape[0]
+    r = n * (n + 1) / 2
+    sorted_idx = np.argsort(fitness)
 
-    return nhood
+    # TODO: which way should I do this?
+    probs = np.arange(n, 0, -1) / r
+    # probs  = np.array([1 / (i + 1) for i in range(n)])
+    # probs /= np.sum(probs)
+    for i in range(n): yield np.random.choice(sorted_idx, size=2, replace=False, p=probs)
 
 
-### Neighborhoods
+### Recombination
 
 
-def linear_nhood(x, y, dimensions, n=5):
-    idx = 0
+def recomb_singlepoint(a, b):
+    n = a.shape[0]
+    idx = np.random.randint(1, n)
+    c = np.concatenate([a[:idx], b[idx:]])
+    return c
+
+
+### Mutation
+
+
+def something():
+    print("a")
+
+
+### Replacement
+
+
+def replace_all():
+    print("a")
+
+
+### Neighborhood
+
+
+def nhood_linear(x, y, dimensions, n=5):
     z = n // 4
     xmax, ymax = dimensions
 
-    neighborhood = np.zeros((n, 2), dtype=int)
-    neighborhood[idx] = [x, y] # center point
-    idx += 1
+    # center point
+    yield [x, y] 
 
     # add horizontal / column points
-    for i in range(y - 1, y - z - 1, -1):
-        neighborhood[idx] = [x, (ymax + i) % ymax]
-        idx += 1
-    for i in range(y + 1, y + z + 1):
-        neighborhood[idx] = [x, (ymax + i) % ymax]
-        idx += 1
+    for i in range(y - 1, y - z - 1, -1): yield [x, (ymax + i) % ymax]
+    for i in range(y + 1, y + z + 1):     yield [x, (ymax + i) % ymax]
     
     # add vertical / row points
-    for j in range(x - 1, x - z - 1, -1):
-        neighborhood[idx] = [(xmax + j) % xmax, y]
-        idx += 1
-    for j in range(x + 1, x + z + 1):
-        neighborhood[idx] = [(xmax + j) % xmax, y]
-        idx += 1
-
-    return neighborhood
+    for j in range(x - 1, x - z - 1, -1): yield [(xmax + j) % xmax, y]
+    for j in range(x + 1, x + z + 1):     yield [(xmax + j) % xmax, y]
 
 
-def get_nhood(population, fitness, nhood_idx):
+def nhood_get(population, fitness, nhood_idx):
+    nhood_idx = list(nhood_idx)
     nhood     = np.array([population[x][y] for x, y in nhood_idx])
     nhood_fit = np.array([fitness[x][y]    for x, y in nhood_idx])
     return nhood, nhood_fit
