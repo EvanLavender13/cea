@@ -5,19 +5,30 @@ import numpy as np
 
 
 def select_linear(nhood, fitness):
-    n = nhood.shape[0] - 1
-    # r = n * (n + 1) / 2
-    sorted_idx = np.argsort(fitness[1:])
+    n = nhood.shape[0]
+    r = n * (n + 1) / 2
+    sorted_idx = np.argsort(fitness)
 
     # TODO: which way should I do this?
-    # probs = np.arange(n, 0, -1) / r
-    # print(fitness[1:])
+    probs = np.arange(1, n + 1) / r
+    # probs  = np.array([1 / (i + 1) for i in range(n)])
+    # probs /= np.sum(probs)
+    # print(fitness)
     # print(sorted_idx)
     # print(probs)
-    probs  = np.array([1 / (i + 1) for i in range(n)])
+    return np.random.choice(sorted_idx, size=2, p=probs)
+
+
+def select_roulette(nhood, fitness):
+    n = nhood.shape[0] - 1
+    sorted_idx = np.argsort(fitness[1:])
+    print(fitness[1:])
+    print(sorted_idx)
+    probs = 1.0 - (fitness[1:] / np.sum(fitness[1:]))
     probs /= np.sum(probs)
-    # print(probs)
-    return np.random.choice(sorted_idx, p=probs)
+    print(probs)
+
+    return 1
 
 
 ### Recombination
@@ -33,9 +44,17 @@ def recomb_singlepoint(a, b):
 ### Mutation
 
 
-def mutate_gaussian(mu, sigma=0.1):
-    n = mu.shape[0]
-    return mu + sigma * np.random.randn(n)
+def mutate_uniform(a, low=0.0, high=1.0):
+    n = a.shape[0]
+    return n
+
+
+def mutate_gaussian(a, sigma=0.1):
+    return a + sigma * np.random.randn()
+    # n = a.shape[0]
+    # idx = np.random.randint(0, n)
+    # a[idx] += sigma * np.random.randn()
+    # return a
 
 
 ### Replacement
