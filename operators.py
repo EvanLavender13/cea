@@ -98,3 +98,7 @@ def nhood_set(population, nhood, nhood_idx):
 
 def sample_uniform(low, high, shape):
     return np.random.uniform(low, high, shape)
+
+
+def sample_gaussian(shape, sigma=1.0):
+    return 1.0 * np.random.randn(*shape)
