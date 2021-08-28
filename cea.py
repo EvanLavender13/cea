@@ -8,7 +8,7 @@ from operators import nhood_get
 def cea_gen(population, fitness, dimensions, f_evaluate, f_nhood, f_select, f_recomb, f_mutate):
     start = time.time()
 
-    pb_mutate = 0.1 # TODO: make parameter
+    pb_mutate = 0.25 # TODO: make parameter
 
     pop_new = np.zeros_like(population)
     for x in range(dimensions[0]):

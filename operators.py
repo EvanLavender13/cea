@@ -41,9 +41,23 @@ def recomb_singlepoint(a, b):
     return c
 
 
+def recomb_ordered(a, b):
+    n = a.shape[0]
+    c = -np.ones(n, dtype=int)
+    i, j = sorted(np.random.choice(n, size=2, replace=False))
+    c[i:j] = a[i:j]
+    for k in b:
+        if k not in c:
+            for l in range(n):
+                if c[l] == -1: 
+                    c[l] = k
+                    break
+    return c
+
+
 ### Mutation
 
-
+# TODO
 def mutate_uniform(a, low=0.0, high=1.0):
     n = a.shape[0]
     return n
@@ -51,10 +65,13 @@ def mutate_uniform(a, low=0.0, high=1.0):
 
 def mutate_gaussian(a, sigma=0.1):
     return a + sigma * np.random.randn()
-    # n = a.shape[0]
-    # idx = np.random.randint(0, n)
-    # a[idx] += sigma * np.random.randn()
-    # return a
+
+
+def mutate_swap(a):
+    n = a.shape[0]
+    i, j = np.random.choice(n, size=2, replace=False)
+    a[i], a[j] = a[j], a[i]
+    return a
 
 
 ### Replacement
@@ -102,3 +119,15 @@ def sample_uniform(low, high, shape):
 
 def sample_gaussian(shape, sigma=1.0):
     return 1.0 * np.random.randn(*shape)
+
+
+def sample_intlist(low, high, shape):
+    return np.random.random_integers(low, high, shape)
+
+
+def sample_intperm(n, shape):
+    a = np.zeros(shape, dtype=int)
+    for x in range(a.shape[0]):
+        for y in range(a.shape[1]):
+            a[x][y] = np.random.permutation(n)
+    return a
