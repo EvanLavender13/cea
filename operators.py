@@ -91,3 +91,10 @@ def nhood_get(population, fitness, nhood_idx):
 
 def nhood_set(population, nhood, nhood_idx):
     for i, (x, y) in enumerate(nhood_idx): population[x][y] = nhood[i]
+
+
+### Sampling
+
+
+def sample_uniform(low, high, shape):
+    return np.random.uniform(low, high, shape)
